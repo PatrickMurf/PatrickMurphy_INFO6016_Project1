@@ -1,0 +1,7 @@
+To run the project, navigate into the following file path:
+
+	PMurphy_6016_Project1 -> x64 -> Release
+
+You'll need to run 1 copy of the "ChatServer.exe", and any number of "ChatClient.exe" copies you'd like.  (Note:  The ChatServer.exe must be run before any of the clients; and must be left running until all of the clients are closed.)
+
+Enter a name into a Client window, and then you'll be able to send messages to the other Client windows.  Type "/exit" to close a Client window.  (Do not close it by hitting the 'X' in the top corner.)  Once all the Client windows have been closed, you can close the Server window by hitting the 'X'.

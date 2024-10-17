@@ -20,19 +20,6 @@
 
 #define DEFAULT_PORT "8412"
 
-//struct PacketHeader
-//{
-//	uint32_t packetSize;
-//	uint32_t messageType;
-//};
-//
-//struct ChatMessage
-//{
-//	PacketHeader header;
-//	uint32_t messageLength;
-//	std::string message;
-//};
-
 std::atomic<bool> isRunning(true);
 
 void receiveMessage(SOCKET socket)
@@ -140,19 +127,7 @@ int main(int arg, char** argv)
 	std::thread recieveThread(receiveMessage, serverSocket);
 
 	Buffer joinBuffer(512);
-	/*
-	ChatMessage joinMessage;
-	joinMessage.message = userName + " has entered the chat!\n";
-	joinMessage.messageLength = joinMessage.message.length();
-	joinMessage.header.messageType = 1;
-	joinMessage.header.packetSize = joinMessage.messageLength + sizeof(joinMessage.messageLength) + sizeof(joinMessage.header.messageType) + sizeof(joinMessage.header.packetSize);
-	joinBuffer.WriteUInt32LE(joinMessage.header.packetSize);
-	joinBuffer.WriteUInt32LE(joinMessage.header.messageType);
-	joinBuffer.WriteUInt32LE(joinMessage.messageLength);
-	joinBuffer.WriteString(joinMessage.message);
-	send(serverSocket, (const char*)(&joinBuffer.m_BufferData[0]), joinMessage.header.packetSize, 0);
-	std::cout << joinMessage.message << "\n";
-	*/
+	
 	sendMessagePacket(serverSocket, userName, "Has entered the chat!\n", joinBuffer);
 
 	while (isRunning) 
@@ -167,23 +142,6 @@ int main(int arg, char** argv)
 			isRunning.store(false, std::memory_order_relaxed);
 			break;
 		}
-
-		/*ChatMessage message;
-		message.message = userName + input;
-		message.messageLength = message.message.length();
-		message.header.messageType = 1;
-		message.header.packetSize = message.messageLength + sizeof(message.messageLength) + sizeof(message.header.messageType) + sizeof(message.header.packetSize);
-
-		const int bufSize = 512;
-		Buffer buffer(bufSize);
-
-		buffer.WriteUInt32LE(message.header.packetSize); 
-		buffer.WriteUInt32LE(message.header.messageType);
-		buffer.WriteUInt32LE(message.messageLength); 
-		buffer.WriteString(message.message); 
-
-		send(serverSocket, (const char*)(&buffer.m_BufferData[0]), message.header.packetSize, 0);
-		std::cout << message.message << "\n";*/
 
 		const int bufSize = 512;
 		Buffer buffer(bufSize);
