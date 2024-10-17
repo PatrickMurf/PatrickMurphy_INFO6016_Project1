@@ -57,4 +57,9 @@ public:
 		}
 		return str;
 	}
+
+	void SetBufferSize(const int newSize)
+	{
+		m_BufferData.resize(newSize);
+	}
 };

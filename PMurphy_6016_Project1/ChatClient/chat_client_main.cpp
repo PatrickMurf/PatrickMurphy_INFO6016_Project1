@@ -11,7 +11,7 @@
 #include <iostream>
 
 #include "string"
-#include "buffer.h"
+//#include "buffer.h"
 
 #include "utilsLib.h"
 
@@ -20,18 +20,18 @@
 
 #define DEFAULT_PORT "8412"
 
-struct PacketHeader
-{
-	uint32_t packetSize;
-	uint32_t messageType;
-};
-
-struct ChatMessage
-{
-	PacketHeader header;
-	uint32_t messageLength;
-	std::string message;
-};
+//struct PacketHeader
+//{
+//	uint32_t packetSize;
+//	uint32_t messageType;
+//};
+//
+//struct ChatMessage
+//{
+//	PacketHeader header;
+//	uint32_t messageLength;
+//	std::string message;
+//};
 
 std::atomic<bool> isRunning(true);
 
@@ -140,6 +140,7 @@ int main(int arg, char** argv)
 	std::thread recieveThread(receiveMessage, serverSocket);
 
 	Buffer joinBuffer(512);
+	/*
 	ChatMessage joinMessage;
 	joinMessage.message = userName + " has entered the chat!\n";
 	joinMessage.messageLength = joinMessage.message.length();
@@ -151,6 +152,8 @@ int main(int arg, char** argv)
 	joinBuffer.WriteString(joinMessage.message);
 	send(serverSocket, (const char*)(&joinBuffer.m_BufferData[0]), joinMessage.header.packetSize, 0);
 	std::cout << joinMessage.message << "\n";
+	*/
+	sendMessagePacket(serverSocket, userName, "Has entered the chat!\n", joinBuffer);
 
 	while (isRunning) 
 	{
@@ -160,11 +163,12 @@ int main(int arg, char** argv)
 		if (input == "/exit") 
 		{
 			std::cout << "Exiting the chat..\n";
+			sendMessagePacket(serverSocket, userName, "Has left the chat!\n", joinBuffer);
 			isRunning.store(false, std::memory_order_relaxed);
 			break;
 		}
 
-		ChatMessage message;
+		/*ChatMessage message;
 		message.message = userName + input;
 		message.messageLength = message.message.length();
 		message.header.messageType = 1;
@@ -179,13 +183,25 @@ int main(int arg, char** argv)
 		buffer.WriteString(message.message); 
 
 		send(serverSocket, (const char*)(&buffer.m_BufferData[0]), message.header.packetSize, 0);
-		std::cout << message.message << "\n";
+		std::cout << message.message << "\n";*/
+
+		const int bufSize = 512;
+		Buffer buffer(bufSize);
+
+		std::string outMessage = sendMessagePacket(serverSocket, userName, input, buffer);
+		std::cout << outMessage << "\n";
 	}
 
 	freeaddrinfo(info);
 
 	shutdown(serverSocket, SD_BOTH);
 	closesocket(serverSocket);
+
+	// This makes sure that the reciving thread will be finished, before closing things out; to avoid an error.
+	if (recieveThread.joinable())
+	{
+		recieveThread.join();
+	}
 
 	isRunning = false;
 

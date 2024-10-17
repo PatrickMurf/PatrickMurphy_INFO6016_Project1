@@ -71,11 +71,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\codea\OneDrive\Desktop\New Fanshawe\2_Fanshawe_Work\Thu-Evening %286016%29\Project1\PatrickMurphy_INFO6016_Project1\PMurphy_6016_Project1\ChatClient;C:\Users\codea\OneDrive\Desktop\New Fanshawe\2_Fanshawe_Work\Thu-Evening %286016%29\Project1\PatrickMurphy_INFO6016_Project1\PMurphy_6016_Project1\UtilsLib;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\codea\OneDrive\Desktop\New Fanshawe\2_Fanshawe_Work\Thu-Evening (6016)\Project1\PatrickMurphy_INFO6016_Project1\PMurphy_6016_Project1\UtilsLib;$(SolutionDir)Extern\lib\UtilsLib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)UtilsLib;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\codea\OneDrive\Desktop\New Fanshawe\2_Fanshawe_Work\Thu-Evening %286016%29\Project1\PatrickMurphy_INFO6016_Project1\PMurphy_6016_Project1\ChatClient;C:\Users\codea\OneDrive\Desktop\New Fanshawe\2_Fanshawe_Work\Thu-Evening %286016%29\Project1\PatrickMurphy_INFO6016_Project1\PMurphy_6016_Project1\UtilsLib;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)UtilsLib;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -134,9 +134,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="buffer.h" />
-  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chat_client_main.cpp" />
   </ItemGroup>

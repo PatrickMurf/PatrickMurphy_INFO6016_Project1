@@ -21,7 +21,7 @@ struct ChatMessage
 	std::string message;
 };
 
-void sendMessagePacket(SOCKET serverSocket, std::string userName, std::string messageInput)
+std::string sendMessagePacket(SOCKET serverSocket, std::string userName, std::string messageInput, Buffer buffer)
 {
 	ChatMessage message;
 	message.message = userName + messageInput;
@@ -29,8 +29,14 @@ void sendMessagePacket(SOCKET serverSocket, std::string userName, std::string me
 	message.header.messageType = 1;
 	message.header.packetSize = message.messageLength + sizeof(message.messageLength) + sizeof(message.header.messageType) + sizeof(message.header.packetSize);
 
-	const int bufSize = 512;
-	Buffer buffer(bufSize);
+	int bufSize = 512;
+
+	while (message.header.packetSize > bufSize)
+	{
+		bufSize += 512;
+	}
+
+	buffer.SetBufferSize(bufSize);
 
 	buffer.WriteUInt32LE(message.header.packetSize);
 	buffer.WriteUInt32LE(message.header.messageType);
@@ -38,4 +44,6 @@ void sendMessagePacket(SOCKET serverSocket, std::string userName, std::string me
 	buffer.WriteString(message.message);
 
 	send(serverSocket, (const char*)(&buffer.m_BufferData[0]), message.header.packetSize, 0);
+
+	return message.message;
 }
